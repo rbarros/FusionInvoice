@@ -51,6 +51,10 @@ class ConfigProvider extends ServiceProvider {
                 'sendmail'   => \Config::get('fi.mailSendmail')
                 )
             );
+             \Config::set('app', array(
+                'locale'=>\Config::get('fi.language'),
+                )
+            );
         });
     }
 
