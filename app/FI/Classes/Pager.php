@@ -25,6 +25,14 @@ class Pager {
 		$nextPage     = $currentPage + 1;
 		$lastPage     = $object->getLastPage();
 
+		foreach (\Request::query() as $key => $val)
+		{
+			if ($key !== 'page')
+			{
+				$object->appends(array($key => $val));
+			}
+		}
+
 		$pager = '<div class="btn-group">';
 		
 		if ($previousPage >= 1)
