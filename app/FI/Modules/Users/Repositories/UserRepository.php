@@ -79,5 +79,14 @@ class UserRepository {
 	{
 		User::destroy($id);
 	}
+
+	/**
+	 * Return a count of records in table
+	 * @return int
+	 */
+	public function count()
+	{
+		return User::count();
+	}
 	
 }

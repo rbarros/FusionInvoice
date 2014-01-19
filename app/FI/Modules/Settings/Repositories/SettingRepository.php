@@ -22,11 +22,25 @@ class SettingRepository {
 	 */
 	public function setAll()
 	{
-		$settings = Setting::all();
-		
-		foreach ($settings as $setting)
+		try 
 		{
-			\Config::set('fi.' . $setting->setting_key, $setting->setting_value);
+			$settings = Setting::all();
+
+			foreach ($settings as $setting)
+			{
+				\Config::set('fi.' . $setting->setting_key, $setting->setting_value);
+			}
+
+			return true;
+
+		}
+		catch (\Illuminate\Database\QueryException $e)
+		{
+			return false;
+		}
+		catch (\PDOException $e)
+		{
+			return false;
 		}
 	}
 
