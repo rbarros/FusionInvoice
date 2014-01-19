@@ -136,12 +136,9 @@
 
 					</ul>
 
-					@if (isset($filter_display) and $filter_display == true) }}
-					@include('filter.jquery_filter')
-					<form class="navbar-search pull-left">
-						<input type="text" class="search-query" id="filter" placeholder="{{ $filter_placeholder }}">
-					</form>
-					@endif
+					@section('filter')
+
+					@show
 
 					<ul class="nav pull-right settings">
                         <li><a href="#">{{ trans('fi.welcome') . ' ' . Auth::user()->name; }}</a></li>

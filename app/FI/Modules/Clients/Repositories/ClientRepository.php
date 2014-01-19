@@ -25,39 +25,30 @@ class ClientRepository {
 	}
 
 	/**
-	 * @TODO Refactor to single getPagedByStatus method
+	 * Get a paged list of records
+	 * @param  integer $page
+	 * @param  integer $numPerPage
+	 * @param  string  $status
+	 * @param  string  $filter
+	 * @return Client
 	 */
-	public function getPagedActive($page = 1, $numPerPage = null)
+	public function getPaged($page = 1, $numPerPage = null, $status = null, $filter = null)
 	{
 		\DB::getPaginator()->setCurrentPage($page);
 
-		$client = $this->initClient();
+		$client = $this->initClient()->orderBy('name');
 
-		return $client->orderBy('name')->where('active', 1)->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
-	}
+		if ($status == 'active')
+			$client->where('active', 1);
+		elseif ($status == 'inactive')
+			$client->where('active', 0);
 
-	/**
-	 * @TODO Refactor to single getPagedByStatus method
-	 */
-	public function getPagedInactive($page = 1, $numPerPage = null)
-	{
-		\DB::getPaginator()->setCurrentPage($page);
+		if ($filter)
+		{
+			$client->keywords($filter);
+		}
 
-		$client = $this->initClient();
-
-		return $client->orderBy('name')->where('active', 0)->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
-	}
-
-	/**
-	 * @TODO Refactor to single getPagedByStatus method
-	 */
-	public function getPagedAll($page = 1, $numPerPage = null)
-	{
-		\DB::getPaginator()->setCurrentPage($page);
-
-		$client = $this->initClient();
-
-		return $client->orderBy('name')->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+		return $client->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
 	}
 
 	/**
@@ -153,7 +144,7 @@ class ClientRepository {
 			\DB::raw('(SELECT SUM(balance) FROM invoice_amounts WHERE invoice_id IN (SELECT id FROM invoices WHERE invoices.client_id = clients.id)) AS balance'),
 			\DB::raw('(SELECT SUM(total) FROM invoice_amounts WHERE invoice_id IN (SELECT id FROM invoices WHERE invoices.client_id = clients.id)) AS total'),
 			\DB::raw('(SELECT SUM(paid) FROM invoice_amounts WHERE invoice_id IN (SELECT id FROM invoices WHERE invoices.client_id = clients.id)) AS paid')
-		);
+			);
 		
 		return $client;
 	}

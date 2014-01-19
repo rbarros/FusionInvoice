@@ -27,25 +27,25 @@ class Client extends \Eloquent {
     |--------------------------------------------------------------------------
     */
 
-	public function invoices()
-	{
-		return $this->hasMany('FI\Modules\Invoices\Models\Invoice');
-	}
+    public function invoices()
+    {
+    	return $this->hasMany('FI\Modules\Invoices\Models\Invoice');
+    }
 
-	public function quotes()
-	{
-		return $this->hasMany('FI\Modules\Quotes\Models\Quote');
-	}
+    public function quotes()
+    {
+    	return $this->hasMany('FI\Modules\Quotes\Models\Quote');
+    }
 
-	public function notes()
-	{
-		return $this->hasMany('FI\Modules\Clients\Models\ClientNote')->orderBy('created_at', 'DESC');
-	}
+    public function notes()
+    {
+    	return $this->hasMany('FI\Modules\Clients\Models\ClientNote')->orderBy('created_at', 'DESC');
+    }
 
-	public function custom()
-	{
-		return $this->hasOne('FI\Modules\CustomFields\Models\ClientCustom');
-	}
+    public function custom()
+    {
+    	return $this->hasOne('FI\Modules\CustomFields\Models\ClientCustom');
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -53,19 +53,42 @@ class Client extends \Eloquent {
     |--------------------------------------------------------------------------
     */
 
-	public function getFormattedBalanceAttribute()
-	{
-		return CurrencyFormatter::format($this->attributes['balance']);
-	}
+    public function getFormattedBalanceAttribute()
+    {
+    	return CurrencyFormatter::format($this->attributes['balance']);
+    }
 
-	public function getFormattedPaidAttribute()
-	{
-		return CurrencyFormatter::format($this->attributes['paid']);
-	}
+    public function getFormattedPaidAttribute()
+    {
+    	return CurrencyFormatter::format($this->attributes['paid']);
+    }
 
-	public function getFormattedTotalAttribute()
-	{
-		return CurrencyFormatter::format($this->attributes['total']);
-	}
-	
+    public function getFormattedTotalAttribute()
+    {
+    	return CurrencyFormatter::format($this->attributes['total']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeKeywords($query, $keywords)
+    {
+    	$keywords = explode(' ', $keywords);
+
+    	foreach ($keywords as $keyword)
+    	{
+    		if ($keyword)
+    		{
+    			$keyword = strtolower($keyword);
+
+    			$query->where(\DB::raw("CONCAT_WS('^',LOWER(name),LOWER(email),phone)"), 'LIKE', "%$keyword%");
+    		}
+    	}
+
+    	return $query;
+    }
+
 }

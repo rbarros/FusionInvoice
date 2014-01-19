@@ -81,20 +81,12 @@ class ClientController extends \BaseController {
 	 */
 	public function index($status = 'active')
 	{
-		switch ($status)
-		{
-			case 'active':
-				$clients = $this->client->getPagedActive(Input::get('page'));
-			break;
-			case 'inactive':
-				$clients = $this->client->getPagedInactive(Input::get('page'));
-			break;
-			default:
-				$clients = $this->client->getPagedAll(Input::get('page'));
-		}
-		
+		$clients = $this->client->getPaged(Input::get('page'), null, $status, Input::get('filter'));
+
 		return View::make('clients.index')
-		->with(array('clients' => $clients, 'status' => $status));
+		->with('clients', $clients)
+		->with('status', $status)
+		->with('filterRoute', 'clients.index');
 	}
 
 	/**
