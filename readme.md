@@ -10,17 +10,7 @@ used in production until an official release is ready. For those interested,
 you can keep tabs on the development activity by switching to the develop 
 branch.
 
-### 2014-01-05
-
-The master branch now contains the alpha-1 version of FusionInvoice. There are
-some features not yet finished, such as data import, a browser installer and
-online payments. At this point in time, the only method of installing the alpha
-release is through command line - so if you don't have a local development 
-environment or don't have access to the cli on your web host, then unfortunately
-you'll have to wait until the browser installer is finished. These instructions
-assume you have both git and composer installed and configured.
-
-#### FusionInvoice Alpha-1 Installation via a Terminal
+### Installation
 
 First, clone the repository:
 
@@ -33,12 +23,9 @@ Next, install the dependencies via Composer (from inside the cloned directory):
 Next, create an empty database and modify the database settings in 
 app/config/database.php to match your environment.
 
-Finally, run:
-
-	$ php artisan migrate --seed
-
-At this point, you should be able to log in using admin@admin.com as the user
-and password as the password.
+Visit /setup in your browser to continue the installation. Do not use artisan at
+the command line to migrate your database - the /setup module will take care of
+that for you.
 
 Please report your findings to either the github issue tracker or in the 
 [Community Support Forums](https://groups.google.com/forum/#!forum/fusioninvoice-community-support).
