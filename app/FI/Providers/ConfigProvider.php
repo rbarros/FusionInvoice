@@ -59,6 +59,11 @@ class ConfigProvider extends ServiceProvider {
                     )
                 );
             }
+
+             Config::set('app', array(
+                'locale' => (Config::get('fi.language')) ? Config::get('fi.language') : 'en',
+                )
+            );
         });
     }
 
