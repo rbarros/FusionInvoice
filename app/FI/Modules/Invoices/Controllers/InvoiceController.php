@@ -21,6 +21,7 @@ use Redirect;
 use View;
 
 use FI\Classes\Date;
+use FI\Classes\Frequency;
 use FI\Classes\NumberFormatter;
 use FI\Statuses\InvoiceStatuses;
 
@@ -124,6 +125,20 @@ class InvoiceController extends \BaseController {
 		);
 
 		$invoiceId = $this->invoice->create($input);
+
+		if (Input::get('recurring'))
+		{
+			$recurringInvoice = App::make('RecurringInvoiceRepository');
+
+			$recurringInvoice->create(
+				array(
+					'invoice_id'          => $invoiceId,
+					'recurring_frequency' => Input::get('recurring_frequency'),
+					'recurring_period'    => Input::get('recurring_period'),
+					'generate_at'         => Date::incrementDate(Input::get('created_at'), Input::get('recurring_period'), Input::get('recurring_frequency'))
+				)
+			);
+		}
 
 		return json_encode(array('success' => 1, 'id' => $invoiceId));
 	}
@@ -254,7 +269,8 @@ class InvoiceController extends \BaseController {
 	public function modalCreate()
 	{
 		return View::make('invoices._modal_create')
-		->with('invoiceGroups', $this->invoiceGroup->lists());
+		->with('invoiceGroups', $this->invoiceGroup->lists())
+		->with('frequencies', Frequency::lists());;
 	}
 
 	/**

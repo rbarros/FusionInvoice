@@ -11,6 +11,10 @@
 
 namespace FI\Classes;
 
+use Config;
+use DateInterval;
+use DateTime;
+
 class Date {
 	
 	/**
@@ -89,9 +93,9 @@ class Date {
 	 */
 	public static function format($date = null)
 	{
-		$date = new \DateTime($date);
+		$date = new DateTime($date);
 
-		return $date->format(\Config::get('fi.dateFormat'));
+		return $date->format(Config::get('fi.dateFormat'));
 	}
 
 	/**
@@ -103,7 +107,7 @@ class Date {
 	{
 		if ($userDate)
 		{
-			$date = \DateTime::createFromFormat(\Config::get('fi.dateFormat'), $userDate);
+			$date = DateTime::createFromFormat(Config::get('fi.dateFormat'), $userDate);
 
 			return $date->format('Y-m-d');
 		}
@@ -113,16 +117,47 @@ class Date {
 
 	/**
 	 * Adds a specified number of days to a user submitted date and returns
-	 * the new date standardized as yyyy-m-dd
+	 * the new date standardized as yyyy-mm-dd
 	 * @param  date $userDate 	The user submitted date
-	 * @param  int $numDays  	The number od days to increment
+	 * @param  int $numDays  	The number of days to increment
 	 * @return date 			The yyyy-mm-dd standardized incremented date
 	 */
 	public static function incrementDateByDays($userDate, $numDays)
 	{
-		$date = \DateTime::createFromFormat(\Config::get('fi.dateFormat'), $userDate);
+		$date = DateTime::createFromFormat(Config::get('fi.dateFormat'), $userDate);
 
-		$date->add(new \DateInterval('P' . $numDays . 'D'));
+		$date->add(new DateInterval('P' . $numDays . 'D'));
+
+		return $date->format('Y-m-d');
+	}
+
+	/**
+	 * Adds a specified number of periods to a user submitted date and returns
+	 * the new date standardized as yyyy-mm-dd
+	 * @param  date $userDate     The user submitted date
+	 * @param  int $period     1 = Days, 2 = Weeks, 3 = Months, 4 = Years
+	 * @param  int $numPeriods The number of periods to increment
+	 * @return date             The yyyy-mm-dd standardized incremented date
+	 */
+	public static function incrementDate($userDate, $period, $numPeriods)
+	{
+		$date = DateTime::createFromFormat(Config::get('fi.dateFormat'), $userDate);
+
+		switch ($period)
+		{
+			case 1:
+				$date->add(new DateInterval('P' . $numPeriods . 'D'));
+				break;
+			case 2:
+				$date->add(new DateInterval('P' . $numPeriods . 'W'));
+				break;
+			case 3:
+				$date->add(new DateInterval('P' . $numPeriods . 'M'));
+				break;
+			case 4:
+				$date->add(new DateInterval('P' . $numPeriods . 'Y'));
+				break;
+		}
 
 		return $date->format('Y-m-d');
 	}

@@ -37,6 +37,7 @@ class ModuleProvider extends ServiceProvider {
         $this->app->bind('InvoiceTaxRateRepository', 'FI\Modules\Invoices\Repositories\InvoiceTaxRateRepository');
         $this->app->bind('InvoiceValidator', 'FI\Modules\Invoices\Validators\InvoiceValidator');
         $this->app->bind('InvoiceItemValidator', 'FI\Validators\ItemValidator');
+        $this->app->bind('RecurringInvoiceRepository', 'FI\Modules\Invoices\Repositories\RecurringInvoiceRepository');
 
         $this->app->bind('InvoiceController', function($app)
         {
