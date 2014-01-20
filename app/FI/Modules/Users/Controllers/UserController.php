@@ -11,6 +11,7 @@
 
 namespace FI\Modules\Users\Controllers;
 
+use Hash;
 use Input;
 use Redirect;
 use View;
