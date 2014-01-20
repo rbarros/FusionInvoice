@@ -53,10 +53,11 @@ class PaymentController extends \BaseController {
 	 */
 	public function index()
 	{
-		$payments = $this->payment->getPaged(Input::get('page'));
+		$payments = $this->payment->getPaged(Input::get('page'), null, Input::get('filter'));
 
 		return View::make('payments.index')
-		->with('payments', $payments);
+		->with('payments', $payments)
+		->with('filterRoute', route('payments.index'));
 	}
 
 	/**

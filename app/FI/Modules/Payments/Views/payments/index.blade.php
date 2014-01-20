@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('filter')
+@include('layouts._filter')
+@stop
+
 @section('jscript')
 <script type="text/javascript">
 

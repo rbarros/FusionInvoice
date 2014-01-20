@@ -32,10 +32,18 @@ class PaymentRepository {
 	 * @param  int  $numPerPage
 	 * @return Payment
 	 */
-	public function getPaged($page = 1, $numPerPage = null)
+	public function getPaged($page = 1, $numPerPage = null, $filter = null)
 	{
 		\DB::getPaginator()->setCurrentPage($page);
-		return Payment::paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+
+		if (!$filter)
+		{
+			return Payment::paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+		}
+		else
+		{
+			return Payment::keywords($filter)->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+		}
 	}
 
 	/**

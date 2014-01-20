@@ -81,4 +81,23 @@ class Payment extends \Eloquent {
         return $query->where(\DB::raw('YEAR(paid_at)'), '=', $year);
     }
 
+    public function scopeKeywords($query, $keywords)
+    {
+        $keywords = explode(' ', $keywords);
+
+        foreach ($keywords as $keyword)
+        {
+            if ($keyword)
+            {
+                $keyword = strtolower($keyword);
+
+                $query->whereRaw('(created_at like ? 
+                    or invoice_id in (select invoice_id from invoices where number like ? or client_id in (select id from clients where lower(name) like ?))
+                    or payment_method_id in (select id from payment_methods where lower(name) like ?))', array("%$keyword%", "%$keyword%", "%$keyword%", "%$keyword%"));
+            }
+        }
+
+        return $query;
+    }
+
 }
