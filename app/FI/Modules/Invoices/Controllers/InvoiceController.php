@@ -80,11 +80,14 @@ class InvoiceController extends \BaseController {
 	 */
 	public function index($status = 'all')
 	{
-		$invoices   = $this->invoice->getPagedByStatus(Input::get('page'), null, $status);
+		$invoices = $this->invoice->getPagedByStatus(Input::get('page'), null, $status, Input::get('filter'));
 		$statuses = InvoiceStatuses::statuses();
 
 		return View::make('invoices.index')
-		->with(array('invoices' => $invoices, 'status' => $status, 'statuses' => $statuses));
+		->with('invoices', $invoices)
+		->with('status', $status)
+		->with('statuses', $statuses)
+		->with('filterRoute', 'invoices.index');
 	}
 
 	/**

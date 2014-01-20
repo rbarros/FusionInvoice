@@ -156,4 +156,30 @@ class Invoice extends \Eloquent {
     {
         return $query->where('invoice_status_id', '<>', 4)->where('due_at', '<', \DB::raw('now()'));
     }
+
+    public function scopeKeywords($query, $keywords)
+    {
+        $keywords = explode(' ', $keywords);
+
+        foreach ($keywords as $keyword)
+        {
+            if ($keyword)
+            {
+                $keyword = strtolower($keyword);
+
+                $query->where('number', 'like', "%$keyword%");
+
+                $query->orWhere('created_at', 'like', "%$keyword%");
+
+                $query->orWhere('due_at', 'like', "%$keyword%");
+
+                $query->orWhereHas('client', function($q) use($keyword)
+                {
+                    $q->whereRaw('name like ?', array('%'.$keyword.'%'));
+                });
+            }
+        }
+
+        return $query;
+    }
 }

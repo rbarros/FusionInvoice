@@ -33,7 +33,7 @@ class InvoiceRepository {
 	 * @param  string  $status
 	 * @return Invoice
 	 */
-	public function getPagedByStatus($page = 1, $numPerPage = null, $status = 'all')
+	public function getPagedByStatus($page = 1, $numPerPage = null, $status = 'all', $filter = null)
 	{
 		\DB::getPaginator()->setCurrentPage($page);
 
@@ -42,26 +42,31 @@ class InvoiceRepository {
 		switch ($status)
 		{
 			case 'draft':
-				return $invoice->draft()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$invoice->draft();
 				break;
 			case 'sent':
-				return $invoice->sent()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$invoice->sent();
 				break;
 			case 'viewed':
-				return $invoice->viewed()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$invoice->viewed();
 				break;
 			case 'paid':
-				return $invoice->paid()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$invoice->paid();
 				break;
 			case 'canceled':
-				return $invoice->canceled()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$invoice->canceled();
 				break;
 			case 'overdue':
-				return $invoice->overdue()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$invoice->overdue();
 				break;
-			default:
-				return $invoice->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
 		}
+
+		if ($filter)
+		{
+			$invoice->keywords($filter);
+		}
+
+		return $invoice->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
 	}
 
 	/**
