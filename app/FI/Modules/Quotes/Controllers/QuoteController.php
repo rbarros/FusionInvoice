@@ -80,11 +80,14 @@ class QuoteController extends \BaseController {
 	 */
 	public function index($status = 'all')
 	{
-		$quotes   = $this->quote->getPagedByStatus(Input::get('page'), null, $status);
+		$quotes   = $this->quote->getPagedByStatus(Input::get('page'), null, $status, Input::get('filter'));
 		$statuses = QuoteStatuses::statuses();
 
 		return View::make('quotes.index')
-		->with(array('quotes' => $quotes, 'status' => $status, 'statuses' => $statuses));
+		->with('quotes', $quotes)
+		->with('status', $status)
+		->with('statuses', $statuses)
+		->with('filterRoute', 'quotes.index');
 	}
 
 	/**

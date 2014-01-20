@@ -33,7 +33,7 @@ class QuoteRepository {
 	 * @param  string $status
 	 * @return Quote
 	 */
-	public function getPagedByStatus($page = 1, $numPerPage = null, $status = 'all')
+	public function getPagedByStatus($page = 1, $numPerPage = null, $status = 'all', $filter = null)
 	{
 		\DB::getPaginator()->setCurrentPage($page);
 
@@ -42,26 +42,31 @@ class QuoteRepository {
 		switch ($status)
 		{
 			case 'draft':
-				return $quote->draft()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$quote->draft();
 				break;
 			case 'sent':
-				return $quote->sent()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$quote->sent();
 				break;
 			case 'viewed':
-				return $quote->viewed()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$quote->viewed();
 				break;
 			case 'approved':
-				return $quote->approved()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$quote->approved();
 				break;
 			case 'rejected':
-				return $quote->rejected()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$quote->rejected();
 				break;
 			case 'canceled':
-				return $quote->canceled()->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+				$quote->canceled();
 				break;
-			default:
-				return $quote->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
 		}
+
+		if ($filter)
+		{
+			$quote->keywords($filter);
+		}
+
+		return $quote->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
 	}
 
 	/**
