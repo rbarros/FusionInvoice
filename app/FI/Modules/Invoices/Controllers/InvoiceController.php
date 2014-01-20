@@ -87,7 +87,7 @@ class InvoiceController extends \BaseController {
 		->with('invoices', $invoices)
 		->with('status', $status)
 		->with('statuses', $statuses)
-		->with('filterRoute', 'invoices.index');
+		->with('filterRoute', route('invoices.index', array($status)));
 	}
 
 	/**

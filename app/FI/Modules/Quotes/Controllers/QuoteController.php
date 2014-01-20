@@ -87,7 +87,7 @@ class QuoteController extends \BaseController {
 		->with('quotes', $quotes)
 		->with('status', $status)
 		->with('statuses', $statuses)
-		->with('filterRoute', 'quotes.index');
+		->with('filterRoute', route('quotes.index', array($status)));
 	}
 
 	/**

@@ -86,7 +86,7 @@ class ClientController extends \BaseController {
 		return View::make('clients.index')
 		->with('clients', $clients)
 		->with('status', $status)
-		->with('filterRoute', 'clients.index');
+		->with('filterRoute', route('clients.index', array($status)));
 	}
 
 	/**

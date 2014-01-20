@@ -152,19 +152,11 @@ class Quote extends \Eloquent {
             {
                 $keyword = strtolower($keyword);
 
-                $query->where('number', 'like', "%$keyword%");
-
-                $query->orWhere('created_at', 'like', "%$keyword%");
-
-                $query->orWhere('expires_at', 'like', "%$keyword%");
-
-                $query->orWhereHas('client', function($q) use($keyword)
-                {
-                    $q->whereRaw('name like ?', array('%'.$keyword.'%'));
-                });
+                $query->whereRaw('(lower(number) like ? or created_at LIKE ? OR expires_at LIKE ? or client_id in (select id from clients where lower(name) like ?))', array("%$keyword%", "%$keyword%", "%$keyword%", "%$keyword%"));
             }
         }
 
         return $query;
     }
+
 }

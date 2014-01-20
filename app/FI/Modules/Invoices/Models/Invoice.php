@@ -167,16 +167,7 @@ class Invoice extends \Eloquent {
             {
                 $keyword = strtolower($keyword);
 
-                $query->where('number', 'like', "%$keyword%");
-
-                $query->orWhere('created_at', 'like', "%$keyword%");
-
-                $query->orWhere('due_at', 'like', "%$keyword%");
-
-                $query->orWhereHas('client', function($q) use($keyword)
-                {
-                    $q->whereRaw('name like ?', array('%'.$keyword.'%'));
-                });
+                $query->whereRaw('(lower(number) LIKE ? OR created_at LIKE ? OR due_at LIKE ? or client_id in (select id from clients where lower(name) like ?))', array("%$keyword%", "%$keyword%", "%$keyword%", "%$keyword%"));
             }
         }
 
