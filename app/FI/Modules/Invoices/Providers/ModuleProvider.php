@@ -63,6 +63,17 @@ class ModuleProvider extends ServiceProvider {
                 $app->make('InvoiceRepository')
             );
         });
+
+        $this->app->bind('InvoiceCopyRepository', function($app)
+        {
+            return new \FI\Modules\Invoices\Repositories\InvoiceCopyRepository(
+                $app->make('ClientRepository'),
+                $app->make('InvoiceRepository'),
+                $app->make('InvoiceGroupRepository'),
+                $app->make('InvoiceItemRepository'),
+                $app->make('InvoiceTaxRateRepository')
+            );
+        });
 	}
 
 }

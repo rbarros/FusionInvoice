@@ -352,60 +352,9 @@ class InvoiceController extends \BaseController {
 			return json_encode(array('success' => 0, 'message' => $this->validator->errors()->first()));
 		}
 
-		$client = App::make('ClientRepository');
+		$invoiceCopy = App::make('InvoiceCopyRepository');
 
-		$clientId = $client->findIdByName(Input::get('client_name'));
-
-		if (!$clientId)
-		{
-			$clientId = $client->create(array('name' => Input::get('client_name')));
-		}
-
-		$invoiceId = $this->invoice->create(
-			array(
-				'client_id'         => $clientId,
-				'created_at'        => Date::unformat(Input::get('created_at')),
-				'due_at'            => Date::incrementDateByDays(Input::get('created_at'), Config::get('fi.invoicesDueAfter')),
-				'invoice_group_id'  => Input::get('invoice_group_id'),
-				'number'            => $this->invoiceGroup->generateNumber(Input::get('invoice_group_id')),
-				'user_id'           => Auth::user()->id,
-				'invoice_status_id' => 1,
-				'url_key'           => str_random(32)
-			)
-		);		
-
-		$items = $this->invoiceItem->findByInvoiceId(Input::get('invoice_id'));
-
-		foreach ($items as $item)
-		{
-			$this->invoiceItem->create(
-				array(
-					'invoice_id'    => $invoiceId,
-					'name'          => $item->name,
-					'description'   => $item->description,
-					'quantity'      => $item->quantity,
-					'price'         => $item->price,
-					'tax_rate_id'   => $item->tax_rate_id,
-					'display_order' => $item->display_order
-				)
-			);
-		}
-
-		$invoiceTaxRates = $this->invoiceTaxRate->findByInvoiceId(Input::get('invoice_id'));
-
-		foreach ($invoiceTaxRates as $invoiceTaxRate)
-		{
-			$this->invoiceTaxRate->create(
-				array(
-					'invoice_id'       => $invoiceId,
-					'tax_rate_id'      => $invoiceTaxRate->tax_rate_id,
-					'include_item_tax' => $invoiceTaxRate->include_item_tax,
-					'tax_total'        => $invoiceTaxRate->tax_total
-				)
-			);
-		}
-
-		Event::fire('invoice.modified', $invoiceId);
+		$invoiceId = $invoiceCopy->copyInvoice(Input::get('invoice_id'), Input::get('client_name'), Input::get('created_at'), Input::get('invoice_group_id'));
 
 		return json_encode(array('success' => 1, 'id' => $invoiceId));
 	}
