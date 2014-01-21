@@ -50,6 +50,13 @@ class ModuleProvider extends ServiceProvider {
             );
         });
 
+        $this->app->bind('RecurringController', function($app)
+        {
+            return new \FI\Modules\Invoices\Controllers\RecurringController(
+                $app->make('RecurringInvoiceRepository')
+            );
+        });
+
         $this->app->bind('PublicInvoiceController', function($app)
         {
             return new \FI\Modules\Invoices\Controllers\PublicInvoiceController(

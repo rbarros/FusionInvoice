@@ -113,7 +113,7 @@
 							<ul class="dropdown-menu">
 								<li><a href="javascript:void(0)" class="create-invoice">{{ trans('fi.create_invoice') }}</a></li>
 								<li><a href="{{ route('invoices.index', array('all')) }}">{{ trans('fi.view_invoices') }}</a></li>
-                                <li><a href="#">{{ trans('fi.view_recurring_invoices') }}</a></li>
+                                <li><a href="{{ route('recurring.index') }}">{{ trans('fi.view_recurring_invoices') }}</a></li>
 							</ul>
 						</li>
 
