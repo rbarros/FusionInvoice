@@ -12,18 +12,20 @@ branch.
 
 ### Installation
 
-First, clone the repository:
+1. Clone the repository:
 
-	$ git clone https://github.com/jesseterry/FusionInvoice.git
+	$ git clone -b develop https://github.com/jesseterry/FusionInvoice.git
 
-Next, install the dependencies via Composer (from inside the cloned directory):
+2. Install the dependencies via Composer (from inside the cloned directory):
 
 	$ composer install
 
-Next, create an empty database and modify the database settings in 
+3. Make sure the app/storage folder and all contents are writable by your web server.
+
+4. Create an empty database and modify the database settings in 
 app/config/database.php to match your environment.
 
-Visit /setup in your browser to continue the installation. Do not use artisan at
+5. Visit /setup in your browser to continue the installation. Do not use artisan at
 the command line to migrate your database - the /setup module will take care of
 that for you.
 
