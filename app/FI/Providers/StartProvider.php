@@ -15,10 +15,16 @@ use Illuminate\Support\ServiceProvider;
 
 class StartProvider extends ServiceProvider {
 
-    public function register() {
+    public function register()
+    {
+        $this->app['command.fi.recurring'] = $this->app->share(function($app)
+        {
+            return new \FI\Modules\Invoices\Commands\Recurring();
+        });
+
+        $this->commands('command.fi.recurring');
 
         // Register the individual module providers here instead of the framework config
-        // @TODO - Figure out how to get alias registration here as well
         $this->app->register('FI\Providers\ConfigProvider');
         $this->app->register('FI\Modules\Clients\Providers\ModuleProvider');
         $this->app->register('FI\Modules\CustomFields\Providers\ModuleProvider');
@@ -41,7 +47,6 @@ class StartProvider extends ServiceProvider {
         }
 
         $this->app->register('Profiler\ProfilerServiceProvider');
-
     }
 
 }
