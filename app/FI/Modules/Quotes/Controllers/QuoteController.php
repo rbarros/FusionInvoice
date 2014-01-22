@@ -113,7 +113,7 @@ class QuoteController extends \BaseController {
 		$input = array(
 			'client_id'        => $clientId,
 			'created_at'       => Date::unformat(Input::get('created_at')),
-			'expires_at'       => Date::incrementDateByDays(Input::get('created_at'), Config::get('fi.quotesExpireAfter')),
+			'expires_at'       => Date::incrementDateByDays(Date::unformat(Input::get('created_at')), Config::get('fi.quotesExpireAfter')),
 			'invoice_group_id' => Input::get('invoice_group_id'),
 			'number'           => $this->invoiceGroup->generateNumber(Input::get('invoice_group_id')),
 			'user_id'          => Auth::user()->id,
@@ -331,7 +331,7 @@ class QuoteController extends \BaseController {
 			array(
 				'client_id'        => $clientId,
 				'created_at'       => Date::unformat(Input::get('created_at')),
-				'expires_at'       => Date::incrementDateByDays(Input::get('created_at'), Config::get('fi.quotesExpireAfter')),
+				'expires_at'       => Date::incrementDateByDays(Date::unformat(Input::get('created_at')), Config::get('fi.quotesExpireAfter')),
 				'invoice_group_id' => Input::get('invoice_group_id'),
 				'number'           => $this->invoiceGroup->generateNumber(Input::get('invoice_group_id')),
 				'user_id'          => Auth::user()->id,
@@ -396,7 +396,7 @@ class QuoteController extends \BaseController {
 		$record = array(
 			'client_id'         => $input['client_id'],
 			'created_at'        => Date::unformat($input['created_at']),
-			'due_at'            => Date::incrementDateByDays($input['created_at'], Config::get('fi.invoicesDueAfter')),
+			'due_at'            => Date::incrementDateByDays(Date::unformat($input['created_at']), Config::get('fi.invoicesDueAfter')),
 			'invoice_group_id'  => $input['invoice_group_id'],
 			'number'            => $this->invoiceGroup->generateNumber($input['invoice_group_id']),
 			'user_id'           => Auth::user()->id,

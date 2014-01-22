@@ -114,7 +114,7 @@ class InvoiceController extends \BaseController {
 		$input = array(
 			'client_id'         => $clientId,
 			'created_at'        => Date::unformat(Input::get('created_at')),
-			'due_at'            => Date::incrementDateByDays(Input::get('created_at'), Config::get('fi.invoicesDueAfter')),
+			'due_at'            => Date::incrementDateByDays(Date::unformat(Input::get('created_at')), Config::get('fi.invoicesDueAfter')),
 			'invoice_group_id'  => Input::get('invoice_group_id'),
 			'number'            => $this->invoiceGroup->generateNumber(Input::get('invoice_group_id')),
 			'user_id'           => Auth::user()->id,
@@ -135,7 +135,7 @@ class InvoiceController extends \BaseController {
 					'invoice_id'          => $invoiceId,
 					'recurring_frequency' => Input::get('recurring_frequency'),
 					'recurring_period'    => Input::get('recurring_period'),
-					'generate_at'         => Date::incrementDate(Input::get('created_at'), Input::get('recurring_period'), Input::get('recurring_frequency'))
+					'generate_at'         => Date::incrementDate(Date::unformat(Input::get('created_at')), Input::get('recurring_period'), Input::get('recurring_frequency'))
 				)
 			);
 		}
@@ -354,7 +354,7 @@ class InvoiceController extends \BaseController {
 
 		$invoiceCopy = App::make('InvoiceCopyRepository');
 
-		$invoiceId = $invoiceCopy->copyInvoice(Input::get('invoice_id'), Input::get('client_name'), Input::get('created_at'), Input::get('invoice_group_id'));
+		$invoiceId = $invoiceCopy->copyInvoice(Input::get('invoice_id'), Input::get('client_name'), Date::unformat(Input::get('created_at')), Date::incrementDateByDays(Date::unformat(Input::get('created_at')), Config::get('fi.invoicesDueAfter')), Input::get('invoice_group_id'), Auth::user()->id);
 
 		return json_encode(array('success' => 1, 'id' => $invoiceId));
 	}
