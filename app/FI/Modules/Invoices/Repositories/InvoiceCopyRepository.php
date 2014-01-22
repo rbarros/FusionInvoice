@@ -65,7 +65,7 @@ class InvoiceCopyRepository {
 		$this->invoiceTaxRate = $invoiceTaxRate;
 	}
 
-	public function copyInvoice($fromInvoiceId, $clientName, $createdAt, $invoiceGroupId)
+	public function copyInvoice($fromInvoiceId, $clientName, $createdAt, $dueAt, $invoiceGroupId, $userId)
 	{
 		$clientId = $this->client->findIdByName($clientName);
 
@@ -77,11 +77,11 @@ class InvoiceCopyRepository {
 		$toInvoiceId = $this->invoice->create(
 			array(
 				'client_id'         => $clientId,
-				'created_at'        => Date::unformat($createdAt),
-				'due_at'            => Date::incrementDateByDays($createdAt, Config::get('fi.invoicesDueAfter')),
+				'created_at'        => $createdAt,
+				'due_at'            => $dueAt,
 				'invoice_group_id'  => $invoiceGroupId,
 				'number'            => $this->invoiceGroup->generateNumber($invoiceGroupId),
-				'user_id'           => Auth::user()->id,
+				'user_id'           => $userId,
 				'invoice_status_id' => 1,
 				'url_key'           => str_random(32)
 			)
