@@ -52,4 +52,15 @@ class RecurringInvoice extends \Eloquent {
     {
         return Date::format($this->attributes['generate_at']);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+   
+    public function scopeRecurNow($query)
+    {
+        $query->where('generate_at', '<=', date('Y-m-d'));
+    }
 }
