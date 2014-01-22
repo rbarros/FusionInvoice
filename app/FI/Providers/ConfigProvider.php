@@ -37,7 +37,7 @@ class ConfigProvider extends ServiceProvider {
         {
             // Set the application specific settings under fi. prefix (fi.settingName)
             $settings = App::make('SettingRepository');
-            
+
             if ($settings->setAll())
             {
                 // This one needs a little special attention
