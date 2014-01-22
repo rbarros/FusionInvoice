@@ -11,18 +11,13 @@
 
 namespace FI\Modules\Invoices\Repositories;
 
+use App;
+use Config;
+
+use FI\Classes\Date;
 use FI\Modules\Invoices\Models\RecurringInvoice;
 
 class RecurringInvoiceRepository {
-
-	/**
-	 * Get all records
-	 * @return Invoice
-	 */
-	public function all()
-	{
-		return RecurringInvoice::all();
-	}
 
 	/**
 	 * Get a list of records
@@ -37,6 +32,34 @@ class RecurringInvoiceRepository {
 		$recurringInvoice = RecurringInvoice::with('invoice')->orderBy('generate_at', 'DESC');
 
 		return $recurringInvoice->paginate($numPerPage ?: \Config::get('defaultNumPerPage'));
+	}
+
+	/**
+	 * Create any new invoices from recurring
+	 * @return int
+	 */
+	public function recurInvoices()
+	{
+		$invoiceCopy = App::make('InvoiceCopyRepository');
+
+		$recurringInvoices = RecurringInvoice::recurNow()->get();
+
+		foreach ($recurringInvoices as $recurringInvoice)
+		{
+			$invoiceCopy->copyInvoice(
+				$recurringInvoice->invoice_id, 
+				$recurringInvoice->invoice->client->name, 
+				$recurringInvoice->generate_at, 
+				Date::incrementDateByDays(substr($recurringInvoice->generate_at, 0, 10), Config::get('fi.invoicesDueAfter')),
+				$recurringInvoice->invoice->invoice_group_id,
+				$recurringInvoice->invoice->user_id);
+
+			$generateAt = Date::incrementDate(substr($recurringInvoice->generate_at, 0, 10), $recurringInvoice->recurring_period, $recurringInvoice->recurring_frequency);
+
+			$this->update(array('generate_at' => $generateAt), $recurringInvoice->id);
+		}
+
+		return count($recurringInvoices);
 	}
 
 	/**
