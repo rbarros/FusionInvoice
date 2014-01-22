@@ -116,15 +116,14 @@ class Date {
 	}
 
 	/**
-	 * Adds a specified number of days to a user submitted date and returns
-	 * the new date standardized as yyyy-mm-dd
-	 * @param  date $userDate 	The user submitted date
+	 * Adds a specified number of days to a yyyy-mm-dd formatted date
+	 * @param  date $date 		The date
 	 * @param  int $numDays  	The number of days to increment
 	 * @return date 			The yyyy-mm-dd standardized incremented date
 	 */
-	public static function incrementDateByDays($userDate, $numDays)
+	public static function incrementDateByDays($date, $numDays)
 	{
-		$date = DateTime::createFromFormat(Config::get('fi.dateFormat'), $userDate);
+		$date = DateTime::createFromFormat('Y-m-d', $date);
 
 		$date->add(new DateInterval('P' . $numDays . 'D'));
 
@@ -132,16 +131,15 @@ class Date {
 	}
 
 	/**
-	 * Adds a specified number of periods to a user submitted date and returns
-	 * the new date standardized as yyyy-mm-dd
-	 * @param  date $userDate     The user submitted date
+	 * Adds a specified number of periods to a yyyy-mm-dd formatted date
+	 * @param  date $date      The date
 	 * @param  int $period     1 = Days, 2 = Weeks, 3 = Months, 4 = Years
 	 * @param  int $numPeriods The number of periods to increment
-	 * @return date             The yyyy-mm-dd standardized incremented date
+	 * @return date            The yyyy-mm-dd standardized incremented date
 	 */
-	public static function incrementDate($userDate, $period, $numPeriods)
+	public static function incrementDate($date, $period, $numPeriods)
 	{
-		$date = DateTime::createFromFormat(Config::get('fi.dateFormat'), $userDate);
+		$date = DateTime::createFromFormat('Y-m-d', $date);
 
 		switch ($period)
 		{
