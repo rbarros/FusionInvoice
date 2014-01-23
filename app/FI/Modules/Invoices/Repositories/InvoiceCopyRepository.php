@@ -65,6 +65,16 @@ class InvoiceCopyRepository {
 		$this->invoiceTaxRate = $invoiceTaxRate;
 	}
 
+	/**
+	 * Copies an invoice
+	 * @param  int $fromInvoiceId
+	 * @param  string $clientName
+	 * @param  date $createdAt
+	 * @param  date $dueAt
+	 * @param  int $invoiceGroupId
+	 * @param  int $userId
+	 * @return int
+	 */
 	public function copyInvoice($fromInvoiceId, $clientName, $createdAt, $dueAt, $invoiceGroupId, $userId)
 	{
 		$clientId = $this->client->findIdByName($clientName);

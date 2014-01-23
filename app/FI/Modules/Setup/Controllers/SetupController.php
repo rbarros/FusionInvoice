@@ -55,12 +55,20 @@ class SetupController extends \BaseController {
 		$this->validator = $validator;
 	}
 
+	/**
+	 * Display the license
+	 * @return View
+	 */
 	public function index()
 	{
 		return View::make('setup.index')
 		->with('license', file_get_contents(base_path() . '/LICENSE'));
 	}
 
+	/**
+	 * Accept the license
+	 * @return Redirect
+	 */
 	public function postIndex()
 	{
 		if ($this->validator->validate(Input::all(), 'licenseRules'))
@@ -71,6 +79,10 @@ class SetupController extends \BaseController {
 		return Redirect::route('setup.index');
 	}
 
+	/**
+	 * Check prerequisites
+	 * @return mixed
+	 */
 	public function prerequisites()
 	{
 		$errors          = array();
@@ -106,11 +118,19 @@ class SetupController extends \BaseController {
 		->with('errors', $errors);
 	}
 
+	/**
+	 * Display the migration page
+	 * @return View
+	 */
 	public function migration()
 	{
 		return View::make('setup.migration');
 	}
 
+	/**
+	 * Attempt to run the migration
+	 * @return Response
+	 */
 	public function postMigration()
 	{
         App::error(function(\Exception $e)
@@ -121,6 +141,10 @@ class SetupController extends \BaseController {
 		return Response::json(array('code' => Artisan::call('migrate', array('--seed' => 1))));
 	}
 
+	/**
+	 * Display the account page if no account exists
+	 * @return mixed
+	 */
 	public function account()
 	{
 		if (!$this->user->count())
@@ -131,26 +155,37 @@ class SetupController extends \BaseController {
 		return Redirect::route('setup.complete');
 	}
 
+	/**
+	 * Submit the account page
+	 * @return Redirect
+	 */
 	public function postAccount()
 	{
-		$input = Input::all();
-
-		if (!$this->validator->validate($input))
+		if (!$this->user->count())
 		{
-			return Redirect::route('setup.account')
-			->withErrors($this->validator->errors())
-			->withInput();
+			$input = Input::all();
+
+			if (!$this->validator->validate($input))
+			{
+				return Redirect::route('setup.account')
+				->withErrors($this->validator->errors())
+				->withInput();
+			}
+
+			unset($input['password_confirmation']);
+
+			$input['password'] = Hash::make($input['password']);
+
+			$this->user->create($input);
 		}
-
-		unset($input['password_confirmation']);
-
-		$input['password'] = Hash::make($input['password']);
-
-		$this->user->create($input);
 
 		return Redirect::route('setup.complete');
 	}
 
+	/**
+	 * Display the completion page
+	 * @return View
+	 */
 	public function complete()
 	{
 		return View::make('setup.complete');

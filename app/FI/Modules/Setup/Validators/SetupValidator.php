@@ -13,10 +13,18 @@ namespace FI\Modules\Setup\Validators;
 
 class SetupValidator extends \FI\Validators\Validator {
 
+	/**
+	 * License validation rules
+	 * @var array
+	 */
 	static $licenseRules = array(
 		'accept' => 'accepted'
 	);
 
+	/**
+	 * Account creation rules
+	 * @var array
+	 */
 	static $rules = array(
 		'name'     => 'required',
 		'email'    => 'required|email',

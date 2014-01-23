@@ -13,6 +13,10 @@ namespace FI\Classes;
 
 class Frequency {
 	
+	/**
+	 * Returns a list of frequencies for recurring invoices
+	 * @return array
+	 */
 	public static function lists()
 	{
 		return array(

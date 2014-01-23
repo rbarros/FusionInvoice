@@ -30,7 +30,8 @@ class QuoteRepository {
 	 * Get a paged list of records
 	 * @param  int $page
 	 * @param  int  $numPerPage
-	 * @param  string $status
+	 * @param  string  $status
+	 * @param  string  $filter
 	 * @return Quote
 	 */
 	public function getPagedByStatus($page = 1, $numPerPage = null, $status = 'all', $filter = null)
