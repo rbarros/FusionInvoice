@@ -24,6 +24,15 @@
 			});
 		});
 
+		$('input[name=recurring]:radio').change(function () {
+			if ($(this).val() == 1) {
+				$('#div-recurring-options').show();
+			}
+			else {
+				$('#div-recurring-options').hide();
+			}
+		});
+
 		$('#invoice_create_confirm').click(function() {
 
 			$.post("{{ route('invoices.store') }}", { 
@@ -92,7 +101,7 @@
 				</div>
 			</div>
 
-			<div class="control-group">
+			<div class="control-group" id="div-recurring-options" style="display: none;">
 				<label class="control-label">{{ trans('fi.every') }}</label>
 				<div class="controls">
 					{{ Form::text('recurring_frequency', null, array('id' => 'recurring_frequency', 'class' => 'input-mini')) }}
