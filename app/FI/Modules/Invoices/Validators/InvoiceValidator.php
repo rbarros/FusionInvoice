@@ -18,9 +18,11 @@ class InvoiceValidator extends \FI\Validators\Validator {
 	 * @var array
 	 */
 	static $createRules = array(
-		'created_at'       => 'required',
-		'client_name'      => 'required',
-		'invoice_group_id' => 'required'
+		'created_at'          => 'required',
+		'client_name'         => 'required',
+		'invoice_group_id'    => 'required',
+		'recurring_frequency' => 'required_if:recurring,1',
+		'recurring_period'    => 'required_if:recurring,1'
 	);
 
 	/**
