@@ -104,7 +104,7 @@
 			<div class="control-group" id="div-recurring-options" style="display: none;">
 				<label class="control-label">{{ trans('fi.every') }}</label>
 				<div class="controls">
-					{{ Form::text('recurring_frequency', null, array('id' => 'recurring_frequency', 'class' => 'input-mini')) }}
+					{{ Form::text('recurring_frequency', '1', array('id' => 'recurring_frequency', 'class' => 'input-mini')) }}
 					{{ Form::select('recurring_period', $frequencies, 3, array('id' => 'recurring_period')) }}
 				</div>
 			</div>
