@@ -28,10 +28,10 @@ class ModuleProvider extends ServiceProvider {
 
     public function register()
     {
+        $this->app->bind('SessionValidator', 'FI\Modules\Sessions\Validators\SessionValidator');
+
         $this->app->bind('SessionController', function($app)
         {
-            $app->bind('SessionValidator', 'FI\Modules\Sessions\Validators\SessionValidator');
-
             return new \FI\Modules\Sessions\Controllers\SessionController(
                 $app->make('SessionValidator')
             );
